@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Shelf Views -->
+    <record id="view_inventory_shelf_list" model="ir.ui.view">
+        <field name="name">inventory.shelf.list</field>
+        <field name="model">inventory.shelf</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="location_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_inventory_shelf_form" model="ir.ui.view">
+        <field name="name">inventory.shelf.form</field>
+        <field name="model">inventory.shelf</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="location_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_inventory_shelf" model="ir.actions.act_window">
+        <field name="name">Rack List</field>
+        <field name="res_model">inventory.shelf</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_inventory_shelf" name="Rack List" parent="stock.menu_stock_inventory_control" action="action_inventory_shelf" sequence="121"/>
+
+    <!-- Shelf Product Views -->
+    <record id="view_shelf_product_list" model="ir.ui.view">
+        <field name="name">inventory.shelf.product.list</field>
+        <field name="model">inventory.shelf.product</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="location_id"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_shelf_product_form" model="ir.ui.view">
+        <field name="name">inventory.shelf.product.form</field>
+        <field name="model">inventory.shelf.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="location_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Shelf Products">
+                            <field name="product_ids">
+                                <list editable="bottom">
+                                    <field name="shelf_id" domain="[('location_id', '=', parent.location_id)]"/>
+                                    <field name="product_ids" widget="many2many_tags"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_shelf_products" model="ir.actions.act_window">
+        <field name="name">Rack Products</field>
+        <field name="res_model">inventory.shelf.product</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_shelf_products" name="Rack Products" parent="stock.menu_stock_inventory_control" action="action_shelf_products" sequence="122"/>
+
+    <!-- Stock Move Line View -->
+    <record id="view_move_line_tree_inherit_shelf" model="ir.ui.view">
+        <field name="name">stock.move.line.tree.inherit.shelf</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_tree"/>
+        <field name="arch" type="xml">
+            <field name="location_dest_id" position="after">
+                <field name="shelf_id"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- Product Template View - Add Shelves Tab -->
+    <record id="product_template_form_view_shelf" model="ir.ui.view">
+        <field name="name">product.template.form.shelf</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Racks" name="shelves">
+                    <field name="shelf_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="location_id"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+    <!-- Product Product View - Add Shelves Tab -->
+    <record id="product_normal_form_view_shelf" model="ir.ui.view">
+        <field name="name">product.product.form.shelf</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Racks" name="shelves">
+                    <field name="shelf_ids" readonly="1">
+                        <list>
+                            <field name="name"/>
+                            <field name="location_id"/>
+                        </list>
+                    </field>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

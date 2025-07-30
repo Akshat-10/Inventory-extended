@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Inherit purchase.request form view to add remarks in line_ids -->
+    <record id="view_purchase_request_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.request.form.inherit</field>
+        <field name="model">purchase.request</field>
+        <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+        <field name="arch" type="xml">
+            <field name="date_required" position="attributes">
+                <attribute name="string">Required Date</attribute>
+            </field>
+            
+            <xpath expr="//field[@name='line_ids']/list/field[@name='name']" position="replace">
+                <field name="item_code"/>
+                <field name="material"/>
+                <field name="hsn_sac_code"/>
+            </xpath>
+            <xpath expr="//field[@name='purchased_qty']" position="before">
+                <field name="remarks"/>
+            </xpath>
+            
+        </field>
+    </record>
+
+    <!-- Inherit purchase.request.line tree view to add remarks -->
+    <record id="purchase_request_line_tree_inherit" model="ir.ui.view">
+        <field name="name">purchase.request.line.tree.inherit</field>
+        <field name="model">purchase.request.line</field>
+        <field name="inherit_id" ref="purchase_request.purchase_request_line_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='purchased_qty']" position="before">
+                <field name="remarks"/>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Inherit purchase.request.line form view to add remarks -->
+    <record id="purchase_request_line_form_inherit" model="ir.ui.view">
+        <field name="name">purchase.request.line.form.inherit</field>
+        <field name="model">purchase.request.line</field>
+        <field name="inherit_id" ref="purchase_request.purchase_request_line_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//group[@name='settings']/field[@name='name']" position="attributes">
+                <attribute name="invisible">True</attribute>
+            </xpath>
+
+            <xpath expr="//group[@name='settings']/field[@name='name']" position="after">
+                <field name="item_code" readonly="is_editable == False"  />
+                <field name="material" readonly="is_editable == False" />
+                <field name="hsn_sac_code" readonly="is_editable == False" />
+            </xpath>
+            <field name="estimated_cost" position="before">
+                <field name="remarks" readonly="is_editable == False" />
+            </field>
+            <field name="date_required" position="attributes">
+                <attribute name="string">Required Date</attribute>
+            </field>
+
+        </field>
+    </record>
+
+</odoo>
